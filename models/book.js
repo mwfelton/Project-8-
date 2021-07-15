@@ -1,3 +1,5 @@
+
+
 'use strict';
 const {
   Model
@@ -19,27 +21,24 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: 'Please provide a title for this book'
-        },
-      },
+          msg: 'Please provide a value for "Title"'
+        }
+      }
     },
-  author: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: {
-        msg: 'Please provide an author for this book'
-      },
-      notNull: {
-        msg: 'Please provide an author for this book',
-      },
+    author: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Please provide a value for "Author"'
+        }
+      }
     },
-  },
     genre: DataTypes.STRING,
     year: DataTypes.INTEGER
   }, {
     sequelize,
-    // modelName: 'Book',
+    modelName: 'Book',
   });
   return Book;
 };

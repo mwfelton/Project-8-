@@ -49,7 +49,7 @@ app.use(function(req, res, next) {
 
 app.use(function(err, req, res, next) {
   if(err.status === 404){
-    res.status(404).render('page-not-found', { err });
+    res.status(404).render('page-not-found', {err});
   } else {
     const status = err.status || 500;
     res.status(status);
