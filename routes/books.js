@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 const Book = require('../models').Book;
 
@@ -15,48 +17,153 @@ function asyncHandler(cb){
   }
 }
 
+// router.get('/', asyncHandler(async (req, res) => {
+//   const bookList = await Book.findAll();
+//   res.render('index', {bookList, title: 'My Lovely Library'});
+// }));
+
+//Pagination
+
 router.get('/', asyncHandler(async (req, res) => {
-  const bookList = await Book.findAll();
-  res.render('index', {bookList, title: 'My Lovely Library'});
+  const page = req.query.page;
+  !page || page <= 0 ? res.redirect("?page=1") : null;
+  const booksPerPage = 10;
+  const { count, rows } = await Book.findAndCountAll({
+    order: [['title', 'ASC']],
+    limit: booksPerPage,
+    offset: (page - 1) * booksPerPage
+  });
+  const numOfPages = Math.ceil(count / booksPerPage);
+  page > numOfPages ? res.redirect(`?page=${numOfPages}`) : null;
+  let pageLinks = 1;
+  res.render('index', {
+    bookList: rows,
+    title: 'My Lovely Books',
+    numOfPages,
+    pageLinks
+  });
 }));
 
-//Create a new article form
+// Search Functionality 
+
+router.get('/search', asyncHandler(async (req, res) => {
+  const { term } = req.query
+  let page = req.query.page;
+  !page || page <= 0 ? res.redirect(`search?term=${term}&page=1`) : null;
+  const booksPerPage = 10;
+  const {count, rows} = await Book.findAndCountAll({
+    where: {
+      [OP.or]: [
+        {
+          title: {
+            [Op.like]: `%${term}%` 
+          }
+        },
+        {
+          author: {
+            [Op.like]: `%${term}%` 
+          }
+        },
+        {
+          genre: {
+            [Op.like]: `%${term}%` 
+          }
+        },
+        {
+          year: {
+            [Op.like]: `%${term}%` 
+          }
+        }
+      ]
+    },
+    limit: booksPerPage,
+    offset: (page - 1) * booksPerPage
+  });
+  if (count > 0) {
+    let pageLinks = 1
+    const numOfPages = Math.ceil(count / booksPerPage);
+    page > numOfPages ? res.redirect(`?term=${term}&page=${numOfPages}`) : null;
+  res.render('index', {
+    bookList: rows,
+    title: 'Search',
+    numOfPages,
+    term,
+    pageLinks
+  })
+  console.log(term);
+  } else {
+    res.render("none-found", { term, title: "Search" });
+  }
+  })
+);
+
+//books/new/
+
 router.get('/new', (req, res) => {
   res.render('new-book', { book: {}, title: "New Book"});
 });
 
-// router.post('/new', asyncHandler(async (req, res) => {
-//   let book = await Book.create(req.body);
-//   res.redirect("/books" + book.id);
-// }));
-
-router.post('/new', asyncHandler(async (req, res) => { //Why does the route have to be the root?
+router.post('/new', asyncHandler(async (req, res) => {
   let book;
   try {
       book = await Book.create(req.body);
-      res.redirect("/books");
+      res.redirect("/books/");
   } catch (error) {
       if(error.name === 'SequelizeValidationError') {
-          console.log(req.body)
           book = await Book.build(req.body);
-          res.render("books/new-book", {book, errors: error.errors})
+          res.render("new-book", {book, errors: error.errors})
       } else {
-          throw error;
+          // throw error;
       }
   }
 }));
 
-// router.get('/books/:id', asyncHandler(async (req, res) => {
- 
-// }));
+//books/:id/
 
-// router.post('/books/:id', asyncHandler(async (req, res) => {
+router.get('/:id', asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+    if (book) {
+      res.render("update-book", { book, title: "Updata a magical book" });
+    } else {
+      const error = new Error(`The book with the ID you requested (${req.params.id}) does not exist.`)
+      error.status = 404;
+      throw error;    
+    }
+}));
 
-// }));
+router.post('/:id', asyncHandler(async (req, res) => {
+  let book;
+  try {
+      book = await Book.findByPk(req.params.id);
+      if (book) {
+          await book.update(req.body);
+          res.redirect("/books");
+      } else {
+          throw error;
+      }
+   } catch (error) {
+          if(error.name === "SequelizeValidationError") {
+              book = await Book.build(req.body);
+              book.id = req.params.id;
+              res.render(`update-book`, {book, errors: error.errors, title: `Update Book` })
+          } else {
+              throw error;
+          }
+      }
+}));
 
-// router.post('/books/:id/delete', asyncHandler(async (req, res) => {
-  
-// }));
+router.post('/:id/delete', asyncHandler(async (req, res) => {
+  const book = await Book.findByPk(req.params.id);
+  if(book){
+    await book.destroy();
+    res.redirect("/");
+  } else {
+    const error = new Error("The book you are looking for does not exist!")
+    error.status = 404;
+    throw error;
+  }
+}));
+
 
 module.exports = router;
 

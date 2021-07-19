@@ -1,0 +1,9 @@
+extends layout
+
+block content
+
+    include search
+    
+    h2 No Book matches the search term "#{term}"
+    p Please try another search or 
+        a(href="/books") return to Book listing
