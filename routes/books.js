@@ -10,12 +10,12 @@ function asyncHandler(cb){
     try {
       await cb(req, res, next)
     } catch(error){
-      // Forward error to the global error handler
-      // res.status(500).send(error);
+      console.log('Error: ', error);
       next(error)
     }
   }
 }
+
 
 // router.get('/', asyncHandler(async (req, res) => {
 //   const bookList = await Book.findAll();
@@ -47,31 +47,32 @@ router.get('/', asyncHandler(async (req, res) => {
 // Search Functionality 
 
 router.get('/search', asyncHandler(async (req, res) => {
-  const { term } = req.query
+  // const { term } = req.query
+  const term = req.query.term.toLowerCase();
   let page = req.query.page;
   !page || page <= 0 ? res.redirect(`search?term=${term}&page=1`) : null;
   const booksPerPage = 10;
   const {count, rows} = await Book.findAndCountAll({
     where: {
-      [OP.or]: [
+      [Op.or]: [
         {
           title: {
-            [Op.like]: `%${term}%` 
+            [Op.iLike]: `%${term}%` 
           }
         },
         {
           author: {
-            [Op.like]: `%${term}%` 
+            [Op.iLike]: `%${term}%` 
           }
         },
         {
           genre: {
-            [Op.like]: `%${term}%` 
+            [Op.iLike]: `%${term}%` 
           }
         },
         {
           year: {
-            [Op.like]: `%${term}%` 
+            [Op.iLike]: `%${term}%` 
           }
         }
       ]
