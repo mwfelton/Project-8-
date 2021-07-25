@@ -57,22 +57,22 @@ router.get('/search', asyncHandler(async (req, res) => {
       [Op.or]: [
         {
           title: {
-            [Op.iLike]: `%${term}%` 
+            [Op.like]: `%${term}%` 
           }
         },
         {
           author: {
-            [Op.iLike]: `%${term}%` 
+            [Op.like]: `%${term}%` 
           }
         },
         {
           genre: {
-            [Op.iLike]: `%${term}%` 
+            [Op.like]: `%${term}%` 
           }
         },
         {
           year: {
-            [Op.iLike]: `%${term}%` 
+            [Op.like]: `%${term}%` 
           }
         }
       ]

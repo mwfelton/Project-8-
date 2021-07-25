@@ -1,10 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@300&display=swap');
+
+
+html, body{
+  margin-top: 0px;
+  display: contents;
+}
+
 body {
   padding: 10px 50px 50px;
-  font: 18px "Garamond", serif;
+  /* font: 18px "Garamond", serif; */
+  font: 20px 'Spartan', sans-serif;
 }
 
 a {
-  color: #019875;
+  color: #005b96;
   text-decoration: none;
   font-weight: bold;
   transition: 0.4s;
@@ -16,21 +25,20 @@ a {
 
 a.button, input[type=submit] {
   color: white;
-  background: #019875;
-  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
-  padding: 10px 14px 12px;
+  background: #005b96;
+  font-family: 'Spartan', sans-serif;
+  padding: 10px 14px 10px;
   font-size: 14px;
-  border-radius: 2px;
   cursor: pointer;
+  border: 1px solid white;
 }
 
 form a.button, input[type=submit] {
-  margin-left: 140px;
   transition: 0.4s;
 }
 
 input[type=submit] {
-  border: 0;
+  border: none;
 }
 
   a.button:hover, input[type=submit]:hover {
@@ -79,19 +87,100 @@ label {
 }
 
 input {
-  padding: 10px;
-  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Spartan', sans-serif;
   font-size: 14px;
-  border-radius: 2px;
-  border-color: #E7E7E7;
   transition: 0.4s;
 }
 
 input[type=text] {
   margin-left: 7px;
-  width: 300px;
+  width: 500px;
+  border:none;
 }
 
 .error {
   color: rgb(236, 15, 15);
+}
+
+/* my styles */
+
+/* Pagination Link */
+
+.pagination-links {
+  display: flex;
+  margin-top: 2em;
+  justify-content: center;
+}
+
+.pagination-links a {
+  display: block;
+  padding: 1em;
+  /* color: #fff; */
+}
+
+/* .pagination-links > * {
+  border-radius: 4px;
+  background-color: #81429e;
+} */
+
+.pagination-links > * + * {
+  margin-left: 0.7em;
+}
+
+li {
+  width: 50px;
+  height: 50px;
+  line-height: 15px;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px #005b96 solid;
+}
+
+
+/* Title */
+
+h1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+  color: white;
+}
+
+form {
+  border: white 1px solid;
+  display: flex;
+  height: 40px;
+  background-color: white;
+}
+
+.create-new-button{
+  color: white;
+  background: #005b96;
+  padding: 10px 14px 10px;
+  font-size: 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-top: 25px;
+  border: 1px solid white;
+}
+
+.background {
+  background: url(/images/bookshelf.jpeg) no-repeat center center fixed;
+  padding-top: 50px;
+  margin-left: 0%;
+  margin-right: 0%;
+  padding-bottom: 50px; 
+  background-size: cover;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.maintable{
+    display: flex;
+    flex-direction: column;
 }

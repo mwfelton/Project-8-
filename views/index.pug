@@ -1,28 +1,29 @@
 extends layout
 
 block content
-  h1 Books
-  
-  include search
+  div.background
+    h1 An SQL library of good reads
 
-  p Welcome to #{title}
-    a.button(href='/books/new') Create New Book
-  table
-    thead
-      tr
-        th Title
-        th Author
-        th Genre
-        th Year
-    tbody
+      include search
+  div.maintable
+    p Welcome to #{title}
+      //- a.button(href='/books/new') Create New Book
+    table
+      thead
+        tr
+          th Title
+          th Author
+          th Genre
+          th Year
+      tbody
 
-    each book in bookList
-      tr
-        td
-          a(href=`/books/${book.id}`)= book.title
-        td= book.author
-        td= book.genre
-        td= book.year
-      tr
+      each book in bookList
+        tr
+          td
+            a(href=`/books/${book.id}`)= book.title
+          td= book.author
+          td= book.genre
+          td= book.year
+        tr
   
   include pagination
